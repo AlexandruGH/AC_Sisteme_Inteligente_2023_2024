@@ -104,8 +104,8 @@ class GaussianNB:
             for outcome in np.unique(self.y_train):
                 self.likelihoods[feature][outcome]['mean'] = self.X_train[feature][
                     self.y_train[self.y_train == outcome].index.values.tolist()].mean()
-                self.likelihoods[feature][outcome]['variance'] = self.X_train[feature][
-                    self.y_train[self.y_train == outcome].index.values.tolist()].var()
+                self.likelihoods[feature][outcome]['std'] = self.X_train[feature][
+                    self.y_train[self.y_train == outcome].index.values.tolist()].std()
 
     def predict(self, X):
 
@@ -128,8 +128,8 @@ class GaussianNB:
 
                 for feat, feat_val in zip(self.features, query):
                     mean = self.likelihoods[feat][outcome]['mean']
-                    var = self.likelihoods[feat][outcome]['variance']
-                    likelihood *= (1 / math.sqrt(2 * math.pi * var)) * np.exp(-(feat_val - mean) ** 2 / (2 * var))
+                    std = self.likelihoods[feat][outcome]['std']
+                    likelihood *= (1 / math.sqrt(2 * math.pi * std)) * np.exp(-(feat_val - mean) ** 2 / (2 * std**2))
 
                 posterior_numerator = (likelihood * prior)
                 probs_outcome[outcome] = posterior_numerator
@@ -151,7 +151,7 @@ if __name__ == "__main__":
     X, y = pre_processing(df)
 
     # Split data into Training and Testing Sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
 
     # print(X_train, y_train)
     gnb_clf = GaussianNB()

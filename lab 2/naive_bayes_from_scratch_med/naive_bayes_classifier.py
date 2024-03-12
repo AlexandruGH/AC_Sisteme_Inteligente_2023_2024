@@ -1,13 +1,43 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import math
 
 
-def accuracy_score(y_true, y_pred):
-    """	score = (y_true - y_pred) / len(y_true) """
+def metrics_score(y_true, y_pred):
 
-    return round(float(sum(y_pred == y_true)) / float(len(y_true)) * 100, 2)
+    # True Positive (TP): we predict a label of yes (positive), and the true label is yes.
+    true_positive = np.sum(np.logical_and(y_pred == 'yes', y_true == 'yes'))
+
+    # True Negative (TN): we predict a label of no (negative), and the true label is no.
+    true_negative = np.sum(np.logical_and(y_pred == 'no', y_true == 'no'))
+
+    # False Positive (FP): we predict a label of yes (positive), but the true label is no.
+    false_positive = np.sum(np.logical_and(y_pred == 'yes', y_true == 'no'))
+
+    # False Negative (FN): we predict a label of no (negative), but the true label is yes.
+    false_negative = np.sum(np.logical_and(y_pred == 'no', y_true == 'yes'))
+
+    # Accuracy: TP + TN / all samples
+    accuracy = float(sum(y_pred == y_true)) / float(len(y_true))
+
+    # False Positive Rate: Number of false positive over the sum of false positives and true negatives
+    # The amount of falsely identified data as true from all the actual negative
+    false_positive_rate = false_positive / (false_positive + true_negative)
+
+    # False Negative Rate: Number of false negative over the sum of false negative and true positive
+    # The amount of falsely identified data as negative from all the actual positive
+    false_negative_rate = false_negative / (false_negative + true_positive)
+
+    # Precision: How many retrieved items are relevant?
+    precision = true_positive / (true_positive + false_positive)
+
+    # Recall: How many relevant items are retrieved?
+    recall = true_positive / (true_positive + false_negative)
+
+    print(f"Accuracy is : {round(accuracy * 100, 2)}%")
+    print(f"False Positive Rate is: {round(false_positive_rate * 100, 2)}%")
+    print(f"False Negative Rate is: {round(false_negative_rate * 100, 2)}%")
+    print(f"Precision is: {round(precision * 100, 2)}%")
+    print(f"Recall is: {round(recall * 100, 2)}%")
 
 
 def pre_processing(df):
@@ -43,7 +73,6 @@ class NaiveBayes:
         self.features = list
         self.likelihoods = {}
         self.class_priors = {}
-        self.pred_priors = {}
 
         self.X_train = np.array
         self.y_train = np.array
@@ -60,18 +89,14 @@ class NaiveBayes:
 
         for feature in self.features:
             self.likelihoods[feature] = {}
-            self.pred_priors[feature] = {}
 
             for feat_val in np.unique(self.X_train[feature]):
-                self.pred_priors[feature].update({feat_val: 0})
-
                 for outcome in np.unique(self.y_train):
-                    self.likelihoods[feature].update({feat_val + '_' + outcome: 0})
-                    self.class_priors.update({outcome: 0})
+                    self.likelihoods[feature].update({str(feat_val) + '_' + str(outcome): 0})
+                    self.class_priors.update({str(outcome): 0})
 
         self._calc_class_prior()
         self._calc_likelihoods()
-        self._calc_predictor_prior()
 
     def _calc_class_prior(self):
 
@@ -89,21 +114,10 @@ class NaiveBayes:
 
             for outcome in np.unique(self.y_train):
                 outcome_count = sum(self.y_train == outcome)
-                feat_likelihood = self.X_train[feature][
-                    self.y_train[self.y_train == outcome].index.values.tolist()].value_counts().to_dict()
+                feat_likelihood = self.X_train[feature][self.y_train[self.y_train == outcome].index.values.tolist()].value_counts().to_dict()
 
                 for feat_val, count in feat_likelihood.items():
                     self.likelihoods[feature][feat_val + '_' + outcome] = count / outcome_count
-
-    def _calc_predictor_prior(self):
-
-        """ P(x) - Evidence """
-
-        for feature in self.features:
-            feat_vals = self.X_train[feature].value_counts().to_dict()
-
-            for feat_val, count in feat_vals.items():
-                self.pred_priors[feature][feat_val] = count / self.train_size
 
     def predict(self, X):
 
@@ -117,13 +131,11 @@ class NaiveBayes:
             for outcome in np.unique(self.y_train):
                 prior = self.class_priors[outcome]
                 likelihood = 1
-                evidence = 1
 
                 for feat, feat_val in zip(self.features, query):
                     likelihood *= self.likelihoods[feat][feat_val + '_' + outcome]
-                    evidence *= self.pred_priors[feat][feat_val]
 
-                posterior = (likelihood * prior) / (evidence)
+                posterior = (likelihood * prior)
 
                 probs_outcome[outcome] = posterior
 
@@ -146,7 +158,7 @@ if __name__ == "__main__":
     nb_clf = NaiveBayes()
     nb_clf.fit(X, y)
 
-    print("Train Accuracy: {}".format(accuracy_score(y, nb_clf.predict(X))))
+    metrics_score(y, nb_clf.predict(X))
 
     # Query 1:
     query = np.array([['Rainy', 'Mild', 'Normal', 't']])
