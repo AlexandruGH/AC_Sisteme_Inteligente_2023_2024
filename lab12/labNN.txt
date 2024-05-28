@@ -1,0 +1,15 @@
+Batch vs Mini Batch vs Stocastic GD - https://medium.com/@amannagrawall002/batch-vs-stochastic-vs-mini-batch-gradient-descent-techniques-7dfe6f963a6f
+
+Convolutional Neural Networks (CNN) - https://towardsdatascience.com/conv2d-to-finally-understand-what-happens-in-the-forward-pass-1bbaafb0b148
+
+Reduce LR on Platou - https://pytorch.org/docs/stable/generated/torch.optim.lr_scheduler.ReduceLROnPlateau.html
+
+Data Eminescu - https://github.com/fioan89/DSAlgorithms/blob/master/unittests/Luceafarul.txt
+Date Shakespeare - https://ocw.mit.edu/ans7870/6/6.006/s08/lecturenotes/files/t8.shakespeare.txt
+
+
+
+Temperature for LLM - https://www.linkedin.com/pulse/what-temperature-large-language-model-damien-benveniste-0kd2c/
+
+
+K Means Clustering - https://www.datacamp.com/tutorial/k-means-clustering-python
