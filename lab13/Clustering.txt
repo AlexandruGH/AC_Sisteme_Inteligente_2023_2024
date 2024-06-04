@@ -1,0 +1,13 @@
+## How to train Neural Network - by Andrej Karpathy
+- [Part I](https://medium.com/missinglink-deep-learning-platform/most-common-neural-net-pytorch-mistakes-456560ada037)
+- [Part II](https://medium.com/missinglink-deep-learning-platform/most-common-neural-net-pytorch-mistakes-456560ada037)
+
+## Clustering - Unsupervised Learning
+
+- [K-Means](https://towardsdatascience.com/create-your-own-k-means-clustering-algorithm-in-python-d7d4c9077670)
+- [DBScan - Density Based Clustering](https://scrunts23.medium.com/dbscan-algorithm-from-scratch-in-python-475b82e0571c)
+- [Hierarchical Clustering](https://antoblog.medium.com/hierarchical-clustering-and-density-based-spatial-clustering-of-applications-with-noise-dbscan-b8d903095532)
+
+- [Hierachical DBSCAN](https://hdbscan.readthedocs.io/en/latest/how_hdbscan_works.html)
+
+- [K-Means for Classifing product categories](https://www.kaggle.com/code/summerhch/k-means-clustering-product-into-categories/notebook)
